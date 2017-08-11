@@ -7,9 +7,6 @@ import android.os.Bundle;
 import com.live.quanmin.autopicker.tiker.TickerUtils;
 import com.live.quanmin.autopicker.tiker.TickerView;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class MainActivity extends AppCompatActivity {
 
     private Handler mHandler = new Handler();
