@@ -17,7 +17,7 @@ public class ScrollSpeedLinearLayoutManager extends LinearLayoutManager {
 
     private static final String TAG = ScrollSpeedLinearLayoutManager.class.getSimpleName();
 
-    private double MILLISECONDS_PER_INCH = 0.3f;
+    private double MILLISECONDS_PER_INCH = 0.3f;//default speed
     private Context context;
 
     public ScrollSpeedLinearLayoutManager(Context context) {
@@ -49,9 +49,7 @@ public class ScrollSpeedLinearLayoutManager extends LinearLayoutManager {
                     @Override
                     protected float calculateSpeedPerPixel
                     (DisplayMetrics displayMetrics) {
-                        float v = (float) (MILLISECONDS_PER_INCH / displayMetrics.density);
-                        Log.i(TAG , "V = " + v);
-                        return v;
+                        return (float) (MILLISECONDS_PER_INCH / displayMetrics.density);
                         //返回滑动一个pixel需要多少毫秒
                     }
 
@@ -61,8 +59,6 @@ public class ScrollSpeedLinearLayoutManager extends LinearLayoutManager {
     }
 
     public void setSpeedSlow() {
-        //自己在这里用density去乘，希望不同分辨率设备上滑动速度相同
-        //0.3f是自己估摸的一个值，可以根据不同需求自己修改
         MILLISECONDS_PER_INCH = context.getResources().getDisplayMetrics().density * 0.3f;
     }
 
