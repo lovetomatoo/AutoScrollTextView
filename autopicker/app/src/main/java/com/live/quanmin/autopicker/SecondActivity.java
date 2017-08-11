@@ -18,6 +18,6 @@ public class SecondActivity extends AppCompatActivity {
         setContentView(R.layout.activity_second);
 
         mSn = (ScrollNumber) findViewById(R.id.sn);
-        mSn.setNumber(99);
+        mSn.setNumber(999);
     }
 }

@@ -4,10 +4,10 @@
     android:layout_height="match_parent">
 
     <com.live.quanmin.autopicker.ScrollNumber
-        android:gravity="center"
-        android:layout_centerInParent="true"
         android:id="@+id/sn"
         android:layout_width="wrap_content"
-        android:layout_height="25dp"/>
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:gravity="center" />
 
 </RelativeLayout>
