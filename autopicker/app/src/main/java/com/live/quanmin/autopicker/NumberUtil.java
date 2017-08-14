@@ -11,7 +11,7 @@ import java.util.List;
 
 public class NumberUtil {
 
-    public static List<String> getScrollNumber(String number, String numberSum) {
+    static List<String> getScrollNumber(String number, String numberSum) {
         Log.i("NumberUtil", "传进来的 number == " + number + ", numberSum ==" + numberSum);
         ArrayList<String> nineList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -36,6 +36,14 @@ public class NumberUtil {
             e.printStackTrace();
         }
         Log.i("NumberUtil", "最后的List的size == " + listData.size());
+        return listData;
+    }
+
+    static List<String> getNewList(String number, String numberSum) {
+        ArrayList<String> listData = new ArrayList<>();
+        for (int i = 0; i <= 9; i++) {
+            listData.add(i + "");
+        }
         return listData;
     }
 }
