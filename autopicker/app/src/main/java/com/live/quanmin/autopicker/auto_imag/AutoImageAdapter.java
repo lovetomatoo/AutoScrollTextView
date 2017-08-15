@@ -21,11 +21,19 @@ import java.util.List;
 
 public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Holder> {
 
-    private ArrayList<Integer> listFilt;
-    private List<Integer> listNumber;
     private Integer mNumber;
+    private List<Integer> listNumber;
+    private ArrayList<Integer> listFilt;
 
-    public AutoImageAdapter(Integer number) {
+    private boolean isFree = true;
+    private boolean isFrist = true;
+    private OnOneAnimFinishListener mOneAnimFinishListener;
+
+    public AutoImageAdapter() {
+    }
+
+    public void setData(Integer number) {
+        isFrist = false;
         mNumber = number;
 
         listNumber = new ArrayList<>();//[1, 3, 1, 4]
@@ -53,18 +61,33 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
             }
 
         }
+        notifyDataSetChanged();
+    }
 
+    public boolean isFree() {
+        return isFree;
+    }
+
+    public boolean isFrist() {
+        return isFrist;
+    }
+
+    public void setOnOneAnimFinishListener(OnOneAnimFinishListener oneAnimFinishListener) {
+        mOneAnimFinishListener = oneAnimFinishListener;
+    }
+
+    public interface OnOneAnimFinishListener {
+        void OnOneAnimFinish();
     }
 
     @Override
-
     public AutoImageAdapter.Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_scroll_image, null);
         return new Holder(view);
     }
 
     @Override
-    public void onBindViewHolder(final AutoImageAdapter.Holder holder, final int position) {
+    public void onBindViewHolder(final AutoImageAdapter.Holder holder, int position) {
 
         //整数圈
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -65, -710);
@@ -86,22 +109,52 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
         objectAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                if (holder.getAdapterPosition() == listNumber.size() - 1) {
+                    isFree = false;
+                }
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                int px = -65 * (listNumber.get(position) + 1);
+                if (holder.getAdapterPosition() == -1) return;
+                int px = -65 * (listNumber.get(holder.getAdapterPosition()) + 1);
                 ObjectAnimator objectAnimator_surplus = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -65, px);
                 int duration_surplus;
-                if (position == 0) {
+                if (holder.getAdapterPosition() == 0) {
                     duration_surplus = mNumber * 10;
                 } else {
-                    duration_surplus = (listNumber.get(position) * mNumber * 10) / (repeatCount * 10 + listNumber.get(position)) / repeatCount;//这个，需要解释一下
+                    duration_surplus = (listNumber.get(holder.getAdapterPosition()) * mNumber * 10) / (repeatCount * 10 + listNumber.get(holder.getAdapterPosition())) / repeatCount;//这个，需要解释一下
                 }
                 objectAnimator_surplus.setDuration(duration_surplus);
-                Log.d("guohongxin", "最后一圈信息： position = " + position + "duration  = " + duration + "px = " + px);
+                Log.d("guohongxin", "最后一圈信息： position = " + holder.getAdapterPosition() + "duration  = " + duration + "px = " + px);
                 objectAnimator_surplus.start();
+                objectAnimator_surplus.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (holder.getAdapterPosition() == listNumber.size() - 1) {
+                            if (mOneAnimFinishListener != null) {
+                                isFree = true;
+                                Log.i("ScrollImage", "OnOneAnimFinish---" + mNumber + "---" + Thread.currentThread().getName());
+                                mOneAnimFinishListener.OnOneAnimFinish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
             }
 
             @Override
@@ -131,4 +184,5 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
             mIvScroll = (ImageView) itemView.findViewById(R.id.iv_scroll);
         }
     }
+    
 }
