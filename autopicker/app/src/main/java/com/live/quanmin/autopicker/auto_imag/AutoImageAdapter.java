@@ -2,13 +2,12 @@ package com.live.quanmin.autopicker.auto_imag;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.live.quanmin.autopicker.R;
@@ -68,18 +67,19 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
     public void onBindViewHolder(final AutoImageAdapter.Holder holder, final int position) {
 
         //整数圈
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", 100, -1500);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -65, -710);
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        final int repeatCount = listFilt.get(position) / 10;
+        if (position != 0) {
+            objectAnimator.setRepeatCount(repeatCount - 1);
+        }
         final long duration;
         if (position == 0) {
             duration = 0;
         } else {
-            duration = mNumber * 10 / listFilt.get(position - 1);
+            duration = (repeatCount * 10 * mNumber * 10) / (repeatCount * 10 + listNumber.get(position)) / repeatCount;//这个，需要解释一下
         }
         objectAnimator.setDuration(duration);
-        int repeatCount = listFilt.get(position) / 10;
-        if (position != 0) {
-            objectAnimator.setRepeatCount(repeatCount - 1);
-        }
         Log.d("guohongxin", "信息： position = " + position + "duration  = " + duration + "repeatCount = " + repeatCount);
         objectAnimator.start();
         //剩余的不到一圈
@@ -91,13 +91,13 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                int px = -140 * listNumber.get(position);
-                ObjectAnimator objectAnimator_surplus = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", 0, px);
+                int px = -65 * (listNumber.get(position) + 1);
+                ObjectAnimator objectAnimator_surplus = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -65, px);
                 int duration_surplus;
                 if (position == 0) {
                     duration_surplus = mNumber * 10;
                 } else {
-                    duration_surplus = mNumber * 10 - mNumber * 10 / listFilt.get(position - 1) * (listFilt.get(position) / 10 - 1);
+                    duration_surplus = (listNumber.get(position) * mNumber * 10) / (repeatCount * 10 + listNumber.get(position)) / repeatCount;//这个，需要解释一下
                 }
                 objectAnimator_surplus.setDuration(duration_surplus);
                 Log.d("guohongxin", "最后一圈信息： position = " + position + "duration  = " + duration + "px = " + px);

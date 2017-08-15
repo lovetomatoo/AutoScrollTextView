@@ -20,6 +20,6 @@ public class ThirdActivity extends AppCompatActivity {
         setContentView(R.layout.activity_third);
 
         mScrollImage = (ScrollImage) findViewById(R.id.scroll_image);
-        mScrollImage.setData(9999);
+        mScrollImage.setData(1999);
     }
 }

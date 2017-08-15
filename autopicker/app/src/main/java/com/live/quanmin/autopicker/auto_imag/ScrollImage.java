@@ -46,6 +46,5 @@ public class ScrollImage extends RelativeLayout {
     public void setData(Integer number) {
 
         mIvScrollImage.setAdapter(new AutoImageAdapter(number));
-
     }
 }
