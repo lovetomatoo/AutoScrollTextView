@@ -184,5 +184,5 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
             mIvScroll = (ImageView) itemView.findViewById(R.id.iv_scroll);
         }
     }
-    
+
 }

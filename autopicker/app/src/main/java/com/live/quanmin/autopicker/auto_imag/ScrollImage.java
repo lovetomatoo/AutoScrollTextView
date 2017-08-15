@@ -67,11 +67,8 @@ public class ScrollImage extends RelativeLayout {
         });
     }
 
-    public void setData(Integer number) {//这里，因为产品的原因。写成只支持相同数字，连续。
-        if (TextUtils.equals(mNumber + "", number + "") || mNumber == 0) {
-            integerLinkedList.add(number);
-        }
-        mNumber = number;
+    public void setData(Integer number) {
+        integerLinkedList.add(number);
         if (mAdapter.isFree() && adapterIsFree) {
             if (integerLinkedList.size() > 0) {
                 mAdapter.setData(integerLinkedList.get(0));
