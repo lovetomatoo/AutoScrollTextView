@@ -11,6 +11,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.live.quanmin.autopicker.R;
+import com.live.quanmin.autopicker.util.SpDpPxUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +22,19 @@ import java.util.List;
 
 public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Holder> {
 
+    private static final String TAG = AutoImageAdapter.class.getSimpleName();
+
     private Integer mNumber;
     private List<Integer> listNumber;
     private ArrayList<Integer> listFilt;
 
     private boolean isFree = true;
-    private boolean isFrist = true;
     private OnOneAnimFinishListener mOneAnimFinishListener;
 
-    public AutoImageAdapter() {
-    }
+    private int transYSingle = SpDpPxUtil.dip2px(21.5f);
+    private int transYTotal = SpDpPxUtil.dip2px(237);
 
     public void setData(Integer number) {
-        isFrist = false;
         mNumber = number;
 
         listNumber = new ArrayList<>();//[1, 3, 1, 4]
@@ -48,28 +49,23 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
 
         listFilt = new ArrayList<>();//[1, 13, 131, 1314]
         for (int i = 0; i <= listNumber.size(); i++) {
-            Log.d("guohongxin", listFilt.size() + "----------------");
+            Log.d(TAG, "listFilt.size() = " + listFilt.size());
             String s = number + "";
             if (i >= 1) {
                 String substring = s.substring(0, i);
-                Log.i("HorAdapter", substring);
+                Log.i(TAG, substring);
                 try {
                     listFilt.add(Integer.parseInt(substring));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
-
         }
         notifyDataSetChanged();
     }
 
     public boolean isFree() {
         return isFree;
-    }
-
-    public boolean isFrist() {
-        return isFrist;
     }
 
     public void setOnOneAnimFinishListener(OnOneAnimFinishListener oneAnimFinishListener) {
@@ -90,7 +86,7 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
     public void onBindViewHolder(final AutoImageAdapter.Holder holder, int position) {
 
         //整数圈
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -65, -710);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -transYSingle, -transYTotal);
         objectAnimator.setInterpolator(new LinearInterpolator());
         final int repeatCount = listFilt.get(position) / 10;
         if (position != 0) {
@@ -103,7 +99,7 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
             duration = (repeatCount * 10 * mNumber * 10) / (repeatCount * 10 + listNumber.get(position)) / repeatCount;//这个，需要解释一下
         }
         objectAnimator.setDuration(duration);
-        Log.d("guohongxin", "信息： position = " + position + "duration  = " + duration + "repeatCount = " + repeatCount);
+        Log.d(TAG, "信息： position = " + position + "duration  = " + duration + "repeatCount = " + repeatCount);
         objectAnimator.start();
         //剩余的不到一圈
         objectAnimator.addListener(new Animator.AnimatorListener() {
@@ -117,8 +113,8 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (holder.getAdapterPosition() == -1) return;
-                int px = -65 * (listNumber.get(holder.getAdapterPosition()) + 1);
-                ObjectAnimator objectAnimator_surplus = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -65, px);
+                int px = -transYSingle * (listNumber.get(holder.getAdapterPosition()) + 1);
+                ObjectAnimator objectAnimator_surplus = ObjectAnimator.ofFloat(holder.mIvScroll, "translationY", -transYSingle, px);
                 int duration_surplus;
                 if (holder.getAdapterPosition() == 0) {
                     duration_surplus = mNumber * 10;
@@ -126,7 +122,7 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
                     duration_surplus = (listNumber.get(holder.getAdapterPosition()) * mNumber * 10) / (repeatCount * 10 + listNumber.get(holder.getAdapterPosition())) / repeatCount;//这个，需要解释一下
                 }
                 objectAnimator_surplus.setDuration(duration_surplus);
-                Log.d("guohongxin", "最后一圈信息： position = " + holder.getAdapterPosition() + "duration  = " + duration + "px = " + px);
+                Log.d(TAG, "最后一圈信息： position = " + holder.getAdapterPosition() + "duration  = " + duration + "px = " + px);
                 objectAnimator_surplus.start();
                 objectAnimator_surplus.addListener(new Animator.AnimatorListener() {
                     @Override
@@ -139,7 +135,7 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
                         if (holder.getAdapterPosition() == listNumber.size() - 1) {
                             if (mOneAnimFinishListener != null) {
                                 isFree = true;
-                                Log.i("ScrollImage", "OnOneAnimFinish---" + mNumber + "---" + Thread.currentThread().getName());
+                                Log.i(TAG, "OnOneAnimFinish---" + mNumber + "---" + Thread.currentThread().getName());
                                 mOneAnimFinishListener.OnOneAnimFinish();
                             }
                         }
@@ -184,5 +180,4 @@ public class AutoImageAdapter extends RecyclerView.Adapter<AutoImageAdapter.Hold
             mIvScroll = (ImageView) itemView.findViewById(R.id.iv_scroll);
         }
     }
-
 }

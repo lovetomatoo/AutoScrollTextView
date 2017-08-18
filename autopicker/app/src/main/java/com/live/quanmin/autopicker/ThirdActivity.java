@@ -40,13 +40,14 @@ public class ThirdActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btn_ok:
                 String strInput = mEtInput.getText().toString().trim();
                 if (TextUtils.isEmpty(strInput)) {
-                    Toast.makeText(this, "sb", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "空空空", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 try {
                     int number = Integer.parseInt(strInput);
                     mScrollImage.setData(number);
                 } catch (NumberFormatException e) {
+                    Toast.makeText(this, "请输入数字", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
                 break;

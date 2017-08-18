@@ -4,14 +4,15 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <ImageView
             android:src="@mipmap/img_combo_x"
-            android:layout_width="21.5dp"
-            android:layout_height="21.5dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_scroll_image"

@@ -3,7 +3,6 @@ package com.live.quanmin.autopicker.auto_imag;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,10 +22,9 @@ public class ScrollImage extends RelativeLayout {
 
     private RecyclerView mIvScrollImage;
     private AutoImageAdapter mAdapter;
-    private LinkedList<Integer> integerLinkedList;
+    private LinkedList<Integer> mIntegerLinkedList;
 
     private boolean adapterIsFree = true;
-    private int mNumber = 0;
 
     public ScrollImage(Context context) {
         super(context);
@@ -43,7 +41,6 @@ public class ScrollImage extends RelativeLayout {
         init();
     }
 
-    //无敌是多么寂寞  无尽的寂寞。。。
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_scroll_image, this);
         mIvScrollImage = (RecyclerView) findViewById(R.id.rv_scroll_image);
@@ -51,27 +48,27 @@ public class ScrollImage extends RelativeLayout {
         mAdapter = new AutoImageAdapter();
         mIvScrollImage.setAdapter(mAdapter);
 
-        integerLinkedList = new LinkedList<>();
+        mIntegerLinkedList = new LinkedList<>();
         mAdapter.setOnOneAnimFinishListener(new AutoImageAdapter.OnOneAnimFinishListener() {
             @Override
             public void OnOneAnimFinish() {
-                Log.d(TAG, integerLinkedList.toString());
+                Log.d(TAG, mIntegerLinkedList.toString());
                 adapterIsFree = true;
-                if (integerLinkedList.size() > 0) {
-                    integerLinkedList.remove(0);
+                if (mIntegerLinkedList.size() > 0) {
+                    mIntegerLinkedList.remove(0);
                 }
-                if (integerLinkedList.size() > 0 && mAdapter.isFree()) {
-                    mAdapter.setData(integerLinkedList.get(0));
+                if (mIntegerLinkedList.size() > 0 && mAdapter.isFree()) {
+                    mAdapter.setData(mIntegerLinkedList.get(0));
                 }
             }
         });
     }
 
     public void setData(Integer number) {
-        integerLinkedList.add(number);
+        mIntegerLinkedList.add(number);
         if (mAdapter.isFree() && adapterIsFree) {
-            if (integerLinkedList.size() > 0) {
-                mAdapter.setData(integerLinkedList.get(0));
+            if (mIntegerLinkedList.size() > 0) {
+                mAdapter.setData(mIntegerLinkedList.get(0));
             }
             adapterIsFree = false;
         }
