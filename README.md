@@ -1,2 +1,4 @@
 # AutoScrollPickerView
 AutoScrollPickerView
+
+yanshi.gif
