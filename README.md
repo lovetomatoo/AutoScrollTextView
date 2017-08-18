@@ -1,4 +1,4 @@
 # AutoScrollPickerView
 AutoScrollPickerView
 
-yanshi.gif
+https://github.com/lovetomatoo/AutoScrollTextView/blob/master/autopicker/yanshi.gif
